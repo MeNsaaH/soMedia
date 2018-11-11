@@ -11,15 +11,20 @@ from .models import UserProfile
 User = get_user_model()
 
 def register(request):
+    """ Add a new user """
+    # redirect if user is already loggedIn
     if request.user.is_authenticated:
         return redirect(reverse('chat:home'))
+    
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
+        # Process POSTed Form data
         if form.is_valid():
             new_user = form.save()
             new_user = authenticate(username=request.POST['username'],
                                     password=request.POST['password1']
                                     )
+            # authenticate and log user in, then redirect to newsFeeds
             login(request, new_user)
             return redirect(reverse('chat:home'))
 
@@ -33,6 +38,7 @@ def profile(request, username):
     """ view profile of user with username """
 
     user = User.objects.get(username=username)
+    # check if current_user is already following the user
     is_following = request.user.is_following(user)
     return render(request, 'accounts/users_profile.html', {'user': user, 'is_following': is_following})
 
@@ -40,10 +46,13 @@ def profile(request, username):
 @login_required
 def edit_profile(request):
     """ edit profile of user """
+    # A profileInlineFormset helps handle forms of model Relationships
+    # The relationship in this case is a OneToOneField
     ProfileInlineFormSet = inlineformset_factory(User, UserProfile, 
                                                  fields=('picture', 'bio', 'phone', 'website', 'address')
                                                  )
     if request.method == "POST":
+        # instance kwargs passed in sets the user on the modelForm
         formset = ProfileInlineFormSet(request.POST, request.FILES, instance=request.user)
         if formset.is_valid():
             formset.save()
@@ -56,7 +65,11 @@ def edit_profile(request):
 @login_required
 def followers(request):
     """ Return the lists of friends user is  following and not """
+
+    # get users followed by the current_user
     users_followed = request.user.followers.all()
+    
+    # get_users not followed and exclude current_user from the list
     unfollowed_users = User.objects.exclude(id__in=users_followed).exclude(id=request.user.id)
     return render(request, 'accounts/followers.html', {'users_followed': users_followed, 'unfollowed_users': unfollowed_users})
 
@@ -64,6 +77,7 @@ def followers(request):
 @login_required
 def follow(request, username):
     """ Add user with username to current user's following list """
+    
     request.user.followers.add(User.objects.get(username=username))
     return redirect('accounts:followers')
 

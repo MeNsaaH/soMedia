@@ -4,6 +4,11 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class User(AbstractUser):
+    """ Custom User Model 
+        In cases where we just want to add a new field to the already existing user, subclass
+        the `AbstractUser` and add the required fields
+        Ensure to update the `settings.AUTH_USER_MODEL` value
+    """
     followers = models.ManyToManyField("self", blank=True)
 
     def is_following(self, user):
@@ -12,6 +17,8 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
+    """ Profile data of user """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, 
                                 related_name='profile',
                                 verbose_name='other Details')
@@ -27,6 +34,7 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_profile(sender, **kwargs):
+    """ Create a profile anytime a new user is created """
     if kwargs['created']:
         user_profile = UserProfile.objects.get_or_create(
                                     user=kwargs['instance']
