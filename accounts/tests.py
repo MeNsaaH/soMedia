@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
+from .forms import ProfileForm
+
 User = get_user_model()
 
 class LoginTestCase(TestCase):
@@ -95,22 +97,51 @@ class RegistrationTestCase(TestCase):
 
 class ProfileTestCase(TestCase):
 
+    def setUp(self):
+        self.user = User.objects.create(username='john', email='john@test.com')
+        self.user.set_password('secret')
+        self.user.save()
+        self.client.login(username='john', password='secret')
+
     def test_redirect_if_user_not_logged_in(self):
+        """ Assert that if user is redirected to login if not logged in"""
+        self.client.logout()
         response = self.client.get(reverse('accounts:view-profile', args=('someUser', )))
         self.assertRedirects(response, f"{reverse('accounts:login')}?next={reverse('accounts:view-profile', args=('someUser',))}")
 
     def test_view_profile(self):
+        """ test profile view """
         x_user = User.objects.create(username='abc', email='abc@test.com')
-        y_user = User.objects.create(username='john', email='john@test.com')
-        y_user.set_password('secret')
-        y_user.save()
-        self.client.login(username='john', password='secret')
+        
         response = self.client.get(reverse('accounts:view-profile', args=('abc', )))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/users_profile.html')
         self.assertTemplateUsed(response, 'accounts/profile.html')
         self.assertEqual(response.context['user'], x_user)
         self.assertEqual(response.context['is_following'], False)
+
+    def test_profile_edit_view(self):
+        """ Test profile_edit view """
+        response = self.client.get(reverse('accounts:edit_profile'))        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(isinstance(response.context['form'], ProfileForm))
+        self.assertTemplateUsed(response, 'accounts/edit_profile.html')
+    
+    def test_profile_edit_success(self):
+        """ Test for successful profile edit """
+        new_profile_data = {
+            'bio': 'Testing the application',
+            'phone': '39239104831',
+            'website': 'https://some.website.com',
+            'address': 'Memory Loc 4'
+        }
+        response = self.client.post(reverse('accounts:edit_profile'), new_profile_data)
+        self.assertRedirects(response, reverse('accounts:view-profile', args=(self.user.username, )))
+        self.user = User.objects.get(username=self.user.username)
+        self.assertEqual(self.user.profile.phone,  '39239104831')
+        self.assertEqual(self.user.profile.bio,  'Testing the application')
+        self.assertEqual(self.user.profile.website,  'https://some.website.com')
+        self.assertEqual(self.user.profile.address,  'Memory Loc 4')
 
 
 class FollowerTestCase(TestCase):

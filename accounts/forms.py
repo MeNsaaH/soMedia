@@ -1,8 +1,11 @@
 from django import forms
-from django.contrib.auth.forms import (
-            UserCreationForm, UserChangeForm)
 from django.contrib.auth import get_user_model
-      
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.forms.models import inlineformset_factory
+
+from .models import UserProfile
+
+User = get_user_model()
 
 class RegistrationForm(UserCreationForm):
     """ Extending the UserCreationForm to specify custom rendering """
@@ -19,7 +22,7 @@ class RegistrationForm(UserCreationForm):
     username = forms.CharField(required=True)
 
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ('first_name',
                   'last_name',
                   'username',
@@ -28,13 +31,8 @@ class RegistrationForm(UserCreationForm):
                   'password2',
                   )
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.firstname = self.cleaned_data['first_name']
-        user.lastname = self.cleaned_data['last_name']
-        user.email = self.cleaned_data['email']
-        if commit:
-            user.save()
-        return user
-
-
+    
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields=('picture', 'bio', 'phone', 'website', 'address')

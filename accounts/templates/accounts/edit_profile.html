@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 
 {% block title %}
-	{{ user.username }}'s Profile 
+	Edit Profile
 {% endblock %}
 
 {% block content %}
@@ -30,27 +30,24 @@
       {% endif %}
       
       <form method="POST" enctype="multipart/form-data">
-      	{{ formset.management_form }}
+				
+				{% csrf_token %}
 
-        {% csrf_token %}
-
-        {% for form in formset %}
-	        {% for field in form %}
-		        <div class="form-group">
-		          {% if field.errors %}
-		            <div class="alert alert-warningalert-dismissible fade show" role='alert'>
-		              {{ field.errors }}
-		              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		                <span aria-hidden="true">&times;</span>
-		              </button>
-		            </div>
-		          {% endif %}
-		      
-		          {{ field.label_tag }}
-		          {{ field|add_class:'form-control' }}
-		        </div>
-	        {% endfor %}
-	      {% endfor %}
+				{% for field in form %}
+					<div class="form-group">
+						{% if field.errors %}
+							<div class="alert alert-warningalert-dismissible fade show" role='alert'>
+								{{ field.errors }}
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+						{% endif %}
+				
+						{{ field.label_tag }}
+						{{ field|add_class:'form-control' }}
+					</div>
+				{% endfor %}
 	      <input type="submit" value="Update Profile" class="btn btn-primary btn-block">
 	    </form>
 		</div>

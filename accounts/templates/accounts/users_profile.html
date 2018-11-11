@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-	{{ user.username }}'s Profile 
+	{% if request.user == user %}
+		My Profile
+	{% else %}
+		{{ user.username }}'s Profile 
+	{% endif %}
 {% endblock %}
 
 {% block content %}

@@ -1,10 +1,9 @@
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
-from django.forms.models import inlineformset_factory
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .forms import RegistrationForm
+from .forms import ProfileForm, RegistrationForm
 from .models import UserProfile
 
 User = get_user_model()
@@ -45,20 +44,16 @@ def profile(request, username):
 @login_required
 def edit_profile(request):
     """ edit profile of user """
-    # A profileInlineFormset helps handle forms of model Relationships
-    # The relationship in this case is a OneToOneField
-    ProfileInlineFormSet = inlineformset_factory(User, UserProfile, 
-                                                 fields=('picture', 'bio', 'phone', 'website', 'address')
-                                                 )
+    
     if request.method == "POST":
         # instance kwargs passed in sets the user on the modelForm
-        formset = ProfileInlineFormSet(request.POST, request.FILES, instance=request.user)
-        if formset.is_valid():
-            formset.save()
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
             return redirect(reverse('accounts:view-profile', args=(request.user.username, )))
     else:
-        formset = ProfileInlineFormSet(instance=request.user)
-    return render(request, 'accounts/edit_profile.html', {'formset': formset})
+        form = ProfileForm(instance=request.user.profile)
+    return render(request, 'accounts/edit_profile.html', {'form': form})
 
 
 @login_required
