@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{{ user.username }}'s Profile 
+{% endblock %}
+
+{% block content %}
+	<div class="container col-md-8">
+		{% include 'accounts/profile.html' %}
+	</div>
+{% endblock %}

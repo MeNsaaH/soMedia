@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Feeds
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid row">
+		<div class="col"></div>
+		<div class="col-md-10">
+			<h1 class="py-3 px-2 bg-dark text-light">Following</h1>
+			<div class="container">
+				<div class="bg-grey">
+					<ul>
+						{% for user in users_followed %}
+							<li>{{ user.first_name }} {{ user.last_name }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			<h3 class="py-3 px-2 bg-dark text-light">Follow Friends</h3>
+				<div class="container">
+					<ul>
+						{% for user in unfollowed_users %}
+							<li class="my-4">{{ user.first_name }} {{ user.last_name }} <a class="btn btn-light" href="{% url 'accounts:follow' user.username %}"><i class="fas fa-plus"></i></a></li>
+						{% endfor %}
+					</ul>
+				</div>
+		</div>
+	</div>
+{% endblock %}

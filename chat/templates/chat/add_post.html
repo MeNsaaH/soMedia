@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+	New Post
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid row">
+		<div class="col-md-8">
+			<h1 class="py-3 px-2 bg-dark text-light d-flex justify-content-between">New Post </h1>
+			<div class=" bg-grey container mx-auto py-3">
+
+				{% if form.non_field_errors %}
+		          <div class="alert alert-warning alert-dismissible fade show" style="font-size: 11px" role="alert">
+		            {{ form.non_field_errors }}
+		            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		              <span aria-hidden="true">&times;</span>
+		            </button>
+		          </div>
+		        {% endif %}
+		        
+		        <form method="POST" enctype="multipart/form-data">
+		          {% csrf_token %}
+		          {% for field in form %}
+		          <div class="form-group">
+		            {% if field.errors %}
+		              <div class="alert alert-warningalert-dismissible fade show" role='alert'>
+		                {{ field.errors }}
+		                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		                  <span aria-hidden="true">&times;</span>
+		                </button>
+		              </div>
+		            {% endif %}
+		        
+		            {{ field.label_tag }}
+		            {{ field|add_class:'form-control' }}
+		          </div>
+		          {% endfor %}
+		          <input type='submit' class="btn btn-primary btn-block" value='submit'>
+		        </form>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<h3 class="py-3 px-2 bg-dark text-light text-right">Me</h3>
+			{% include 'accounts/profile.html' %}
+		</div>
+	</div>
+{% endblock %}

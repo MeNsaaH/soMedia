@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+	{{ user.username }}'s Profile 
+{% endblock %}
+
+{% block content %}
+	<div class="container col-md-8">
+		<div class="card">
+			{% if user.profile.picture %}
+				<img class="card-img-top" src='{{ user.profile.picture.url }}'>
+			{% else %}
+				<div class="container mt-1 text-center"><i class="fas fa-9x fa-user"></i></div>
+			{% endif %}
+
+		<div class="card-body">
+			<div class="card-title">
+				{{ user.first_name }} {{ user.last_name }}
+			</div>
+		</div>
+		<div class="card-footer">
+			{% if formset.non_field_errors %}
+        <div class="alert alert-warning alert-dismissible fade show" style="font-size: 11px" role="alert">
+          {{ formset.non_field_errors }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endif %}
+      
+      <form method="POST" enctype="multipart/form-data">
+      	{{ formset.management_form }}
+
+        {% csrf_token %}
+
+        {% for form in formset %}
+	        {% for field in form %}
+		        <div class="form-group">
+		          {% if field.errors %}
+		            <div class="alert alert-warningalert-dismissible fade show" role='alert'>
+		              {{ field.errors }}
+		              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		                <span aria-hidden="true">&times;</span>
+		              </button>
+		            </div>
+		          {% endif %}
+		      
+		          {{ field.label_tag }}
+		          {{ field|add_class:'form-control' }}
+		        </div>
+	        {% endfor %}
+	      {% endfor %}
+	      <input type="submit" value="Update Profile" class="btn btn-primary btn-block">
+	    </form>
+		</div>
+	</div>
+		
+	</div>
+{% endblock %}

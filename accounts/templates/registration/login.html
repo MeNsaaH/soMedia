@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Login
+{% endblock %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+  <div class="container col-8">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header py-3"><h4>Login</h4></div>
+      <div class="card-body">
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-warning alert-dismissible fade show" style="font-size: 11px" role="alert">
+            {{ form.non_field_errors }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endif %}
+        
+        <form action="{% url 'accounts:login' %}" method="POST">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="form-group">
+            {% if field.errors %}
+              <div class="alert alert-warningalert-dismissible fade show" role='alert'>
+                {{ field.errors }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endif %}
+        
+            {{ field.label_tag }}
+            {{ field|add_class:'form-control' }}
+          </div>
+          {% endfor %}
+          <div class="form-group">
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox"> Keep me Logged In</label>
+            </div>
+          </div>
+          <input type='submit' class="btn btn-primary btn-block" value='Login'>
+        </form>
+        <div class="text-center">
+          <a class="d-block small mt-3" href="{% url 'accounts:register' %}">Don't have an accounts? Register</a>
+          <a class="d-block small" href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

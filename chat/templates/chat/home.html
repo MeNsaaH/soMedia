@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+
+{% block title %}
+	Feeds
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid row">
+		<div class="col-md-8">
+			<h1 class="py-3 px-2 bg-dark text-light d-flex justify-content-between">News Feed <a href="{% url 'chat:add_post' %}"><i class="fas fa-plus text-light"></i></a></h1>
+			<div class="container bg-grey">
+				{% for post in posts %}
+					<div class=" my-4 card" style="box-shadow: #484646 0px 4px 1px">
+						{% if post.picture %}
+							<div class="card-img-top text-center">
+								<img style="max-width: 99%; height: auto;" src="{{ post.picture.url }}">
+							</div>
+						{% endif %}
+						<div class="card-body">
+							<div class="card-title text-right">
+								{% if post.user == request.user %}
+									<strong>Me</strong>
+								{% else %}
+								<strong>
+									<a class='text-dark' href="{% url 'accounts:view-profile' post.user.username %}">{{ post.user.first_name }} {{ post.user.last_name }}</a>
+								</strong>
+								{% endif %}
+							</div>
+							<div class="card-text">
+								{{ post.text }}
+							</div>
+						</div>
+						<div class="card-footer">
+							<div class="d-flex justify-content-between">
+								<i>{{ post.posted_date }}</i>
+								<a class="btn btn-outline-dark" data-toggle='collapse' href="#comments{{ post.id }}" role="button"  aria-expanded="false" aria-controls="comments{{ post.id }}">
+									<i class="fas fa-2x fa-comment"></i> <span class="badge badge-danger">{{ post.comments.count }}</span>
+								</a>
+							</div>
+							<div class="collapse" id="comments{{ post.id }}">
+								<div class="mt-2 card card-body">
+									{% for comment in post.comments.all %}
+										<code class="blockquote text-center border-bottom" style="font-size: 0.8rem">
+											{{ comment.text }}
+
+											<footer class="blockquote-footer">
+											{% if comment.user == user %}
+												Me
+											{% else %}
+												{{ comment.user.first_name }} {{ comment.user.last_name }}
+											{% endif %}
+												{{ comment.comment_date}}
+											</footer>
+										</code>
+									{% endfor %}
+									<form method="POST" action="{% url 'chat:add_comment' post.id %}">
+										{% csrf_token %}
+										{% for field in comment_form %}
+											<div class="form-group">
+									            {% if field.errors %}
+									              <div class="alert alert-warningalert-dismissible fade show" role='alert'>
+									                {{ field.errors }}
+									                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									                  <span aria-hidden="true">&times;</span>
+									                </button>
+									              </div>
+									            {% endif %}
+									        
+									            {{ field.label_tag }}
+									            {{ field|add_class:'form-control' }}
+									        </div>
+									    {% endfor %}
+										<input type="submit" value="post" class="btn btn-outline-primary">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="col-md-4">
+			<h3 class="py-3 px-2 bg-dark text-light text-right">Me</h3>
+			{% include 'accounts/profile.html' %}
+		</div>
+	</div>
+{% endblock %}

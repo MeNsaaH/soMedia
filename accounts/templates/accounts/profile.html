@@ -1,0 +1,27 @@
+<div class="card">
+	{% if user.profile.picture %}
+		<img class="card-img-top" src='{{ user.profile.picture.url }}'>
+	{% else %}
+		<div class="container mt-1 text-center"><i class="fas fa-9x fa-user"></i></div>
+	{% endif %}
+	<div class="card-body">
+		<div class="card-title">
+			{{ user.first_name }} {{ user.last_name }}
+		</div>
+		<div class="card-text">
+			{{ user.profile.bio }}
+		</div>
+	</div>
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item"><strong><i class="fa fa-fw fa-user-alt"></i></strong> {{ user.username }}</li>
+		<li class="list-group-item"><strong><i class="fa fa-fw fa-envelope"></i></strong> {{ user.email }}</li>
+		<li class="list-group-item"><strong><i class="fa fa-fw fa-phone"></i></strong> {{ user.profile.phone }}</li>
+		<li class="list-group-item"><strong><i class="fa fa-fw fa-globe"></i></strong> {{ user.profile.website }}</li>
+		<li class="list-group-item"><strong><i class="fa fa-fw fa-map-marker-alt"></i></strong> {{ user.profile.address }}</li>
+	</ul>
+	{% if request.user == user %}
+		<div class="card-body">
+			<a href="{% url 'accounts:edit_profile' %}" class="card-link btn btn-danger">Edit Profile</a>
+		</div>
+	{% endif %}
+</div>

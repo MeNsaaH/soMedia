@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<title>{% block title %}soMedia{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href="{% url 'chat:home' %}">soMedia</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="faslse" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+      	{% if request.user.is_authenticated %}
+	        <li class="nav-item">
+	          <a class="nav-link" href="#">
+	            <i class="fas fa-fw fa-user"></i>Hello, {{ request.user }}</a>
+	        </li>
+	        <li class="nav-item">
+	        	<a class="nav-link" href="{% url 'accounts:followers' %}">
+	        		<i class="fas fa-fw fa-users"></i>
+	        		Followers
+	        	</a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link" href="{% url 'accounts:logout' %}">
+	            <i class="fas fa-fw fa-sign-out-alt"></i>Logout
+	          </a>
+	        </li>
+	    {% else %}
+	    	<li class="nav-item">
+	          <a class="nav-link" href="{% url 'accounts:login' %}">
+	            <i class="fas fa-fw fa-sign-in-alt"></i> Login
+	          </a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link" href="{% url 'accounts:register' %}">
+	            <i class="fas fa-fw fa-user-check"></i> Register
+	          </a>
+	        </li>
+	    {% endif %}
+	     </ul>	
+    </div>
+  </nav>
+  <div class="content-wrapper">
+	    <div class="container-fluid my-5 pt-3">
+	      {% block content %}
+
+	      {% endblock %}
+	    </div>	      
+
+	    <!-- /.container-fluid-->
+	    <!-- /.content-wrapper-->
+	    <footer class="sticky-footer fixed-bottom bg-dark text-light">
+	      <div class="container">
+	        <div class="text-center">
+	          <small>Copyright © DjangoTuts 2018</small>
+	        </div>
+	      </div>
+	    </footer>
+		<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	</div>
+</body>
+</html>
