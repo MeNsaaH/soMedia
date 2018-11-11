@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 
-from .forms import PostForm, CommentForm
+from .forms import CommentForm, PostForm
 from .models import Post
+
 
 @login_required
 def home(request):

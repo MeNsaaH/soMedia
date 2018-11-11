@@ -1,6 +1,7 @@
 from django import forms
-from .models import Post, Comment
-      
+
+from .models import Comment, Post
+
 
 class PostForm(forms.ModelForm):
 	""" Form for handling addition of posts """
@@ -19,4 +20,3 @@ class CommentForm(forms.Form):
 		""" custom save method to create comment """
 
 		comment = Comment.objects.create(text=self.cleaned_data.get('text', None), post=post, user=user)
-		return comment

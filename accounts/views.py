@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.forms.models import inlineformset_factory
+from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
 
 from .forms import RegistrationForm
 from .models import UserProfile
@@ -84,6 +83,6 @@ def follow(request, username):
 
 def unfollow(request, username):
     """ Remove username from user's following list """
-    print(username)
+    
     request.user.followers.remove(User.objects.get(username=username))
     return redirect('accounts:followers')
