@@ -84,5 +84,6 @@ def follow(request, username):
 
 def unfollow(request, username):
     """ Remove username from user's following list """
+    print(username)
     request.user.followers.remove(User.objects.get(username=username))
     return redirect('accounts:followers')
