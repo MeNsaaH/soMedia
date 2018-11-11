@@ -11,20 +11,48 @@
 			<h1 class="py-3 px-2 bg-dark text-light">Following</h1>
 			<div class="container">
 				<div class="bg-grey">
-					<ul>
-						{% for user in users_followed %}
-							<li>{{ user.first_name }} {{ user.last_name }}</li>
-						{% endfor %}
-					</ul>
+					{% for user in users_followed %}
+					<div class="my-4 border-top py-2">
+						<div class="row">
+							<div class="col-md-4">
+								{% if user.profile.picture %}
+									<img class="card-img-top" style="max-height: 50%; max-width: 100%; border-radius: 50%" src='{{ user.profile.picture.url }}'>
+									{% else %}
+										<div class="container mt-1 text-center"><i class="fas fa-5x fa-user"></i></div>
+								{% endif %}
+							</div>
+							<div class="col-md-8">
+								<div class="h-100 w-100 d-flex align-items-center justify-items-center">
+									<a href="{% url 'accounts:view-profile' user.username %}">{{ user.first_name }} {{ user.last_name }} </a>
+									 <a class="mx-2 btn btn-light" href="{% url 'accounts:unfollow' user.username %}"> Unfollow <i class="fas fa-user-cogs"></i></a>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
 				</div>
 			</div>
 			<h3 class="py-3 px-2 bg-dark text-light">Follow Friends</h3>
 				<div class="container">
-					<ul>
-						{% for user in unfollowed_users %}
-							<li class="my-4">{{ user.first_name }} {{ user.last_name }} <a class="btn btn-light" href="{% url 'accounts:follow' user.username %}"><i class="fas fa-plus"></i></a></li>
-						{% endfor %}
-					</ul>
+					{% for user in unfollowed_users %}
+						<div class="my-4 border-top py-2">
+							<div class="row">
+								<div class="col-md-4">
+									{% if user.profile.picture %}
+										<img class="card-img-top" style="max-height: 50%; max-width: 100%; border-radius: 50%" src='{{ user.profile.picture.url }}'>
+										{% else %}
+											<div class="container mt-1 text-center"><i class="fas fa-5x fa-user"></i></div>
+									{% endif %}
+								</div>
+								<div class="col-md-8">
+									<div class="h-100 w-100 d-flex align-items-center justify-items-center">
+											<a href="{% url 'accounts:view-profile' user.username %}">{{ user.first_name }} {{ user.last_name }} </a>
+										<a class="btn btn-dark mx-3" href="{% url 'accounts:follow' user.username %}"><i class="fas fa-user-plus"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
 				</div>
 		</div>
 	</div>
