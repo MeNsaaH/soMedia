@@ -54,7 +54,7 @@ coverage.xml
 
 # Django stuff:
 *.log
-soMedia/media/
+media/
 local_settings.py
 *.sqlite3
 
