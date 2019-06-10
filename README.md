@@ -1,4 +1,5 @@
 # soMedia
+<a href="http://www.djangoproject.com/"><img src="https://www.djangoproject.com/m/img/badges/djangomade124x25.gif" border="0" alt="Made with Django." title="Made with Django." /></a>
 ![ScreenShot](/libs/static/images/page-shot.png)
 
 A simple social Media Application for sharing images amongst users. This application was developed for teaching django to new learners and to expose them to the numerous functionalities of django.
